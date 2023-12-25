@@ -1,5 +1,5 @@
-import 'package:academia_app/app/store/global_store.dart';
-import 'package:academia_app/app/pages/splash/splash_page.dart';
+import 'package:academia_app/app/pages/login/login_page.dart';
+import 'package:academia_app/app/stores/global_store.dart';
 import 'package:academia_app/app/shared/api.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -12,6 +12,6 @@ class AppModule extends Module {
 
   @override
   void routes(r) {
-    r.child('/', child: (context) => const SplashPage());
+    r.child(Modular.initialRoute, child: (context) => const LoginPage());
   }
 }

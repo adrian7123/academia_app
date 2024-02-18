@@ -8,7 +8,7 @@ class Customer {
   String pass;
   String phone;
   // String exercises;
-  String accessToken;
+  String? accessToken;
 
   Customer({
     required this.id,
@@ -17,7 +17,7 @@ class Customer {
     required this.email,
     required this.pass,
     required this.phone,
-    required this.accessToken,
+    this.accessToken,
   });
 
   Map<String, dynamic> toMap() {
@@ -40,7 +40,7 @@ class Customer {
       email: map['email'] ?? '',
       pass: map['pass'] ?? '',
       phone: map['phone'] ?? '',
-      accessToken: map['accessToken'] ?? '',
+      accessToken: map['access_token'],
     );
   }
 

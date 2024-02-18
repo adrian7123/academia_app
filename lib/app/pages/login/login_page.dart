@@ -1,11 +1,13 @@
 import 'package:academia_app/app/services/customer_service.dart';
 import 'package:academia_app/app/shared/api_response.dart';
+import 'package:academia_app/app/stores/global_store.dart';
 import 'package:academia_app/widgets/alert.dart';
 import 'package:academia_app/widgets/text_widgets.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,6 +16,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  GlobalStore global = Modular.get();
+
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
 
@@ -37,20 +41,27 @@ class _LoginPageState extends State<LoginPage> {
         _loading = true;
       });
 
-      final customerService = CustomerService();
+      try {
+        final customerService = CustomerService();
 
-      final loginRes = await customerService.login(
-        email: _emailController.text,
-        pass: _passController.text,
-      );
+        final loginRes = await customerService.login(
+          email: _emailController.text,
+          pass: _passController.text,
+        );
 
-      if (loginRes.status == ApiResponseStatus.success) {
-        TextInput.finishAutofillContext();
-        Modular.to.pushReplacementNamed('/home');
-      } else {
-        setState(() {
-          errorMessage = loginRes.message;
-        });
+        if (loginRes.status == ApiResponseStatus.success) {
+          TextInput.finishAutofillContext();
+
+          await global.setCustomer(loginRes.data);
+
+          Modular.to.pushReplacementNamed('/home');
+        } else {
+          setState(() {
+            errorMessage = loginRes.message;
+          });
+        }
+      } catch (e) {
+        Logger().e(e);
       }
 
       setState(() {
@@ -242,7 +253,8 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Expanded(
                             child: OutlinedButton(
-                              onPressed: () => validateAndSubmit(),
+                              onPressed:
+                                  _loading ? null : () => validateAndSubmit(),
                               child: SizedBox(
                                 height: 50,
                                 child: Center(

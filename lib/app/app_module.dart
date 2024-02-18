@@ -1,3 +1,4 @@
+import 'package:academia_app/app/pages/home/home_page.dart';
 import 'package:academia_app/app/pages/login/login_page.dart';
 import 'package:academia_app/app/stores/global_store.dart';
 import 'package:academia_app/app/shared/api.dart';
@@ -13,5 +14,6 @@ class AppModule extends Module {
   @override
   void routes(r) {
     r.child(Modular.initialRoute, child: (context) => const LoginPage());
+    r.child('/home', child: (context) => const HomePage());
   }
 }
